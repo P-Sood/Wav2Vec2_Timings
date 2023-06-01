@@ -196,15 +196,19 @@ def get_times(path , model , text , labels , sample_rate , enable_gpu):
             '…':"",
             }
 
+    #rep just becomes the same dictionary, but with support for re functions
     non_alphanumeric_chars = string.punctuation
     my_dict = {char: "" for char in non_alphanumeric_chars}
     rep = {**rep  , **my_dict}
     rep = dict((re.escape(k), v) for k, v in rep.items()) 
+
     pattern = re.compile("|".join(rep.keys()))
-    
+
+    #This is where we capitalize, and remove all punctuation and characters from rep
     transcript = pattern.sub(lambda m: rep[re.escape(m.group(0))], text.upper())
-    transc_list = transcript.split()
-    
+    #Split the transcript based on spaces
+    transc_list = transcript.split(" ")
+
     # Here is where we convert 4 -> FOUR
     for i , word in enumerate(transc_list):
         if word.isnumeric() or any(map(str.isdigit, word)):
